@@ -27,7 +27,7 @@ const config = {
       name: 'web'
     },
     port: process.env.PORT || 3000,
-    db: 'mongodb+srv://vuminh:vuminh@cluster0.c8wkb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+    db: 'mongodb+srv://vuminh:vuminh@cluster0.c8wkb.mongodb.net/web?retryWrites=true&w=majority'
   }
 };
 
