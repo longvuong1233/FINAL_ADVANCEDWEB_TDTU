@@ -1,0 +1,76 @@
+<% include header %>
+    <% include topNav %>
+
+        <div id="inform-infor" class="container">
+            <%if(String(user._id)==String(inform.idOwner._id)){%>
+                <div class="dropdown float-right">
+                    <button type="button" class="color-transparent remove-boder dropdown-toggle"
+                        data-toggle="dropdown"></button>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item" data-toggle="modal" data-target="#edit-inform">
+                            Edit
+                        </button>
+                        <a class="dropdown-item" href="/inform/delete/<%=inform._id%>">Delete</a>
+                    </div>
+                    <div class="modal fade" id="edit-inform">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <!-- Modal Header -->
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Inform</h4>
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        &times;
+                                    </button>
+                                </div>
+
+                                <form action="/inform/edit" method="post">
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <input type="hidden" value="<%=inform._id%>" name="idInform">
+                                        <a href=""><span><b>
+                                                    <%=user.name%>
+                                                </b></span></a>
+                                        <br />
+
+                                        <label><b>Title</b></label>
+                                        <textarea class="form-control" rows="2"
+                                            name="title"><%=inform.title%></textarea>
+                                        <label><b>Content</b></label>
+                                        <textarea class="form-control" rows="4"
+                                            name="content"><%=inform.content%></textarea>
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-success">Edit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <%}%>
+                    <h2 class="title-text text-primary">
+                        <%=inform.title%>
+                    </h2>
+                    <p>
+                        <%=inform.content%>
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <small><span class="text-danger">Đăng bởi:</span>
+                                <%=inform.idOwner.name%>
+                            </small>
+                        </div>
+                        <div>
+                            <small><span class="text-success">Phân loại:</span>
+                                <%=inform.idType.name%> |
+                                    <span class="text-warning">Ngày đăng:</span>
+                                    <%=inform.createdAt%>
+                            </small>
+                        </div>
+                    </div>
+        </div>
+        <% include footer %>

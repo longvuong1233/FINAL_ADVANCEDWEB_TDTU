@@ -1,0 +1,92 @@
+<% include header %> <% include topNav %>
+
+<div id="user-infor">
+  <div id="card-user">
+    <div id="avatar-panel" class="d-flex justify-content-center">
+      <span id="edit-avatar-btn" @click="changeAvatar()"
+        ><i class="fas fa-camera-retro fa-lg text-danger pointer"></i
+      ></span>
+      <img src="<%=targetedUser.avatar%>" class="rounded-circle" />
+    </div>
+  </div>
+  <form id="form-change-avatar" method="post" action="/user/editavatar" enctype="multipart/form-data">
+      <input type="file" name="avatar" hidden id="input-change-avatar">
+  </form>
+  <div class="container" id="content-user-infor-page">
+    <div class="row">
+      <div class="col-md-3">
+        <div id="table-infor">
+          <ul class="list-group">
+            <li class="list-group-item">Tên: <%=targetedUser.name%></li>
+            <li class="list-group-item">Lớp: <%=targetedUser.class%></li>
+            <li class="list-group-item">Khoa: <%=targetedUser.faculty%></li>
+          </ul>
+        </div>
+
+        <%if(targetedUser._id==user.id){%>
+        <button
+          class="btn btn-warning my-3"
+          data-toggle="modal"
+          data-target="#edit-information-user"
+        >
+          Chỉnh sửa
+        </button>
+        <div class="modal" id="edit-information-user">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h1 class="modal-title">Chỉnh sửa thông tin</h1>
+                <button type="button" class="close" data-dismiss="modal">
+                  ×
+                </button>
+              </div>
+              <form action="/user/editinfor" method="post">
+                <!-- Modal body -->
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label>Tên:</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value="<%=targetedUser.name%>"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Lớp:</label>
+                    <input
+                      value="<%=targetedUser.class%>"
+                      type="text"
+                      name="class"
+                      class="form-control"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label>Khoa:</label>
+                    <input
+                      value="<%=targetedUser.faculty%>"
+                      type="text"
+                      name="faculty"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <%}%>
+      </div>
+      <div class="col-md-7"><% include stream %></div>
+    </div>
+  </div>
+</div>
+
+<% include footer %>

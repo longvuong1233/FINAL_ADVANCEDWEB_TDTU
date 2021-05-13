@@ -1,0 +1,43 @@
+<div id="scroll-area">
+  
+  <div id="inform-tdtu">
+    <div class="float-right "><span class="pointer" @click="openTypeList=!openTypeList"><i class="fas fa-sort-down"></i></span></div>
+    <h2 class="title-text pointer">
+      <a href="/inform">     <span><i class="fas fa-bezier-curve text-warning"></i></span> Thông báo</a>
+    </h2>
+    
+    <div class="list-group" v-show="openTypeList==true">
+      <% for(let j=0; j<listTypeInform.length; j++) {%>
+      <a href="/inform?type=<%=listTypeInform[j]._id%>" class="list-group-item list-group-item-action list-group-item-light"
+        ><%=listTypeInform[j].name%></a
+      >
+      <%}%>
+      
+    </div>
+    <hr />
+    <h2 class="title-text">
+      <span><i class="fas fa-envelope-open-text text-success"></i></span> Thông báo mới nhất
+    </h2>
+    <div class="list-group">
+      <a
+        :href="'/inform?id='+inform._id"
+        class="
+          list-group-item list-group-item-action
+          flex-column
+          align-items-start
+        "
+        v-for="(inform,indexInform) in listInform" :key=indexInform
+      >
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">  {{briefText(inform.title,35)}}</h5>
+          <small>{{convertTime(inform.createdAt)}}</small>
+        </div>
+        <p class="mb-1">
+       {{briefText(inform.content,80)}}
+        </p>
+        <small>{{inform.idType.name}}</small>
+      </a>
+     
+    </div>
+  </div>
+</div>

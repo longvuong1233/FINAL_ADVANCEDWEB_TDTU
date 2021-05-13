@@ -1,0 +1,76 @@
+<% include header %> <% include topNav %>
+<div id="list-inform" class="container" >
+ 
+  <select name="cars" class="custom-select-sm" @change="changeType($event)">
+    <option value="all" <%if(type=='all'){%>selected<%}%>>All</option>
+    <% for(let j=0; j<listTypeInform.length; j++) {%>
+                                        
+      <option   value="<%=listTypeInform[j]._id%>" <%if(type==listTypeInform[j]._id){%>selected<%}%>  ><%=listTypeInform[j].name%></option>
+      <%}%>
+  </select>
+  <div class="d-flex justify-content-center"><ul class="pagination">
+   <%if(back==true){%>  <li class="page-item"><a class="page-link" href="/inform?type=<%=type%>&page=<%=currentPage-1%>"><</a></li><%}%>
+    <li class="page-item"><a class="page-link" href="/inform?type=<%=type%>&page=<%=currentPage%>"><%=currentPage %></a></li>
+ 
+    <%if(next==true){%>  <li class="page-item"><a class="page-link" href="/inform?type=<%=type%>&page=<%=currentPage+1%>">></a></li><%}%>
+  </ul></div>
+  <div id="informs">
+    <% for(let j=0; j<listInform.length; j++) {%>
+    <div class="inform pointer my-4" >
+      <h3 class="text-primary"><%=listInform[j].title%></h3>
+      <p class="px-2"><%=listInform[j].content.substring(0,100)+'...' %></p>
+      <a href="/inform?id=<%=listInform[j]._id%>"><small>Xem chi tiết</small></a>
+      <div class="float-right pb-5"><small><%=listInform[j].idType.name%> | <%=listInform[j].createdAt%></small></div>
+    </div>
+    <%}%>
+  </div>
+
+  <%if (typeof user.manageTopic !='undefined' &&typeof user.manageTopic.name!=''){%>
+  <div id="area-faculty">
+    <button
+      class="btn btn-success"
+      data-toggle="modal"
+      data-target="#new-inform"
+    >
+      Tạo Thông Báo Mới
+    </button>
+  </div>
+  <div class="modal fade" id="new-inform">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Nội dung thông báo</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <form action="/inform" method="post">
+          <!-- Modal body -->
+          <div class="modal-body">
+            <a class="navbar-brand" href=""> Hello </a>
+
+            <div class="form-group">
+              <label>Phân loại:</label>
+                <span class="text-danger title-text"><%=user.manageTopic.name%></span>
+            </div>
+            <label><b>Chủ đề</b></label>
+            <textarea class="form-control" rows="2" name="title"></textarea>
+            <label><b>Nội dung</b></label>
+            <textarea class="form-control" rows="4" name="content"></textarea>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Tạo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <%}%>
+
+</div>
+
+<% include footer %>

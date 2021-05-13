@@ -1,0 +1,261 @@
+<div class="container">
+  <div class="well">
+    <div>
+      <h4>Hôm nay bạn thế nào</h4>
+      <div class="input-group">
+        <textarea
+          class="form-control"
+          v-model="content"
+          placeholder="Bạn đang nghĩ gì thế ?"
+        ></textarea>
+        <div class="input-group-prepend mt-3">
+          <button class="remove-boder color-transparent" @click="emitPost">
+            <i
+              class="
+                fas
+                fa-snowboarding fa-rotate-270 fa-spin
+                text-primary
+                fa-2x
+              "
+            ></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-start my-2">
+        <div @click="stickImages">
+          <i class="fas fa-camera-retro fa-2x text-success pointer"></i>
+        </div>
+        <div class="mx-3" @click="closeYoutube=!closeYoutube">
+          <i class="fab fa-youtube fa-2x text-danger pointer"></i>
+        </div>
+        <div v-show="closeYoutube">
+          <input
+            type="text"
+            v-model="youtube"
+            name="youtube"
+            class="form-control form-control-sm"
+          />
+        </div>
+        <div>
+          <input type="file" id="form-images" hidden name="files" multiple />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="list-post">
+    <div id="dialog-edit-post" class="container" v-show="dialogEditPost==true">
+      <button
+        type="button"
+        class="color-transparent remove-boder text-right float-right"
+        @click="dialogEditPost=!dialogEditPost"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="input-group">
+        <textarea class="form-control" v-model="contentEdit"></textarea>
+        <div class="input-group-prepend mt-3">
+          <button class="remove-boder color-transparent" @click="emitPost()">
+            <i class="fas fa-pen fa-rotate-270 fa-spin text-warning fa-lg"></i>
+          </button>
+        </div>
+      </div>
+      <div class="d-flex justify-content-start my-2">
+        <div>
+          <i
+            class="fas fa-camera-retro fa-2x text-success pointer"
+            @click="stickImages"
+          ></i>
+        </div>
+        <div class="mx-3">
+          <i class="fab fa-youtube fa-2x text-danger pointer"></i>
+        </div>
+        <div>
+          <input
+            type="text"
+            v-model="youtubeEdit"
+            name="youtube"
+            class="form-control form-control-sm"
+          />
+        </div>
+        <div>
+          <input
+            type="file"
+            id="form-images-edit"
+            hidden
+            name="files"
+            multiple
+          />
+        </div>
+      </div>
+      <div class="d-flex justify-content-start my-2">
+        <div class="custom-control custom-switch">
+          <input
+            type="checkbox"
+            class="custom-control-input"
+            id="switch1"
+            v-model="deleteImagesEdit"
+          />
+
+          <label class="custom-control-label" for="switch1">
+            <i class="fas fa-trash text-danger pointer" title="Xóa hết ảnh"></i
+          ></label>
+        </div>
+      </div>
+    </div>
+    <div
+      class="panel panel-default post-ele"
+      v-for="(post,index) in listPost"
+      :key="index"
+    >
+      <div
+        class="dropdown edit-button"
+        v-if="checkAuth('<%=user._id%>',post.idOwner._id)==true"
+      >
+        <button
+          type="button"
+          class="color-transparent remove-boder dropdown-toggle"
+          data-toggle="dropdown"
+        ></button>
+        <div class="dropdown-menu">
+          <button
+            class="dropdown-item"
+            @click="openEditPost(index,post._id,'<%=user._id%>')"
+          >
+            Edit
+          </button>
+          <button class="dropdown-item" @click="deletePost(index,post._id)">
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <div data-toggle="tooltip" :title="post.createdAt" data-placement="top">
+        <div
+          class="panel-thumbnail d-flex flex-wrap"
+          v-if="post.images.length!=0"
+        >
+          <div
+            class="image-flex"
+            v-for="(img,iImage) in post.images"
+            :key="iImage"
+          >
+            <img :src="img" class="w-100" />
+          </div>
+        </div>
+        <div class="my-2" v-if="post.video!=''">
+          <iframe
+            width="100%"
+            height="315"
+            :src="post.video"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+        <div class="panel-body py-3">
+          <p class="lead">{{ post.content }}</p>
+          <p>
+            <a :href="'/user?id='+post.idOwner._id"
+              ><img
+                :src="post.idOwner.avatar"
+                class="rounded-circle"
+                height="28px"
+                width="28px"
+            /></a>
+            {{ post.idOwner.name }}
+          </p>
+          <hr />
+          <div class="">
+            <span class="pointer px-2">
+              {{ post.heart.length }}
+              <i
+                class="fas fa-grin-hearts fa-lg"
+                :class="{'text-danger':checkHeart('<%=user._id%>',index)}"
+                @click="leaveHeart('<%=user._id%>',index,post._id)"
+              ></i
+            ></span>
+            <span class="pointer hoverEle px-2" @click="openComment(post._id)"
+              >{{ post.listComment.length }} Bình Luận</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="comment-area" :id="'comment-area'+post._id">
+        <hr />
+        <div class="input-comment">
+          <div class="px-2">
+          <a href="/user?id=<%=user._id%>">
+            <img
+            src="<%=user.avatar%>"
+            class="rounded-circle"
+            height="28px"
+            width="28px"
+          />
+          </a>
+          </div>
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control input-comment"
+              :id="'input-comment-'+post._id"
+              placeholder="...."
+              aria-label="....."
+              aria-describedby="basic-addon2"
+            />
+            <div class="input-group-append pt-1">
+              <button
+                class="remove-boder color-transparent"
+                @click="comment(post._id,'<%=user._id%>',index)"
+              >
+                <i class="fas fa-paper-plane fa-lg fa-spin text-primary"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          data-toggle="tooltip"
+          :title="cmt.createdAt"
+          class="my-2"
+          v-for="(cmt,iCmt) in post.listComment"
+          :key="iCmt"
+        >
+          <div class="d-flex justify-content-start">
+            <a :href="'/user?id='+cmt.idOwner._id">
+              <img
+              :src="cmt.idOwner.avatar"
+              class="rounded-circle mx-1"
+              height="28px"
+              width="28px"
+            />
+            </a>
+            <div class="">{{ cmt.idOwner.name }}</div>
+            <div class="comment">{{ cmt.message }}</div>
+            <div
+              class="dropdown edit-button"
+              v-if="checkAuth('<%=user._id%>',cmt.idOwner._id)==true"
+            >
+              <button
+                type="button"
+                class="color-transparent remove-boder dropdown-toggle"
+                data-toggle="dropdown"
+              ></button>
+              <div class="dropdown-menu">
+                <button
+                  class="dropdown-item"
+                  @click="deleteComment(cmt._id,'<%=user._id%>',index,iCmt)"
+                >
+                  Xóa
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

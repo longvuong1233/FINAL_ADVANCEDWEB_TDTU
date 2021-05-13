@@ -1,0 +1,220 @@
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.panel textarea,
+.well textarea,
+textarea.form-control {
+  resize: none;
+}
+.well i {
+  color: #c0c0c0;
+}
+
+.color-transparent {
+  background-color: transparent;
+}
+
+.remove-boder {
+  border: none;
+}
+
+.input-comment {
+  display: flex;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+#inform-tdtu {
+  position: fixed;
+
+  min-width: 25%;
+  max-width: 25%;
+  overflow: scroll;
+  height: 90%;
+}
+
+#inform-tdtu::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#inform-tdtu {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.post-ele {
+  box-shadow: 5px 5px 5px rgb(238, 230, 242);
+  padding: 10px 15px;
+  margin: 30px 0px;
+
+  border-radius: 15px;
+}
+
+#content {
+  margin-top: 80px;
+}
+
+.title-text {
+  font-style: italic;
+  color: #5e5e5e;
+}
+
+#login-input {
+  width: 30%;
+  margin: 0 auto;
+}
+
+#login-google {
+  border-right: 2px solid #5e5e5e;
+  height: 150px;
+}
+
+#login-page {
+  background-image: url("../img/login-background.jpg");
+  background-position: center;
+}
+
+.login-text {
+  font-size: 65px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  color: #c4c4e1;
+  padding-bottom: 30px;
+}
+
+.comment {
+  background-color: #efefef;
+  margin-left: 10px;
+  padding: 5px 12px;
+  border-radius: 13px;
+}
+
+.comment-area {
+  display: none;
+}
+
+.hoverEle:hover {
+  background-color: #c0c0c0;
+  border-radius: 12px;
+  padding: 3px;
+}
+
+.image-flex {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+.edit-button {
+  text-align: right;
+  position: relative;
+  width: 100%;
+  right: 0;
+  display: none;
+}
+
+.panel:hover .edit-button {
+  display: block;
+}
+
+#dialog-edit-post {
+  background-color: #f4f4f4;
+  border-radius: 50px;
+  width: 250px;
+  height: 200px;
+  margin-right: 10px;
+  position: fixed;
+  right: 0;
+  padding: 20px 20px;
+  box-shadow: 5px 5px 5px #efefef;
+  top: 20%;
+}
+
+#list-inform,
+#admin-page {
+  margin-top: 80px;
+}
+
+#informs {
+  padding: 25px 30px;
+}
+.inform {
+  background-color: #f0f0f0;
+  width: 80%;
+  border-radius: 30px;
+  margin-left: 100px;
+  padding: 5px 15px;
+  box-shadow: 8px 8px 5px #f4f4f4;
+  box-sizing: content-box;
+  min-height: 50px;
+}
+
+#area-faculty {
+  position: fixed;
+  bottom: 2%;
+  right: 2%;
+}
+
+#create-account {
+  border-right: solid 1px black;
+}
+
+#inform-infor {
+  margin-top: 80px;
+
+  width: 100%;
+
+  border-radius: 10px;
+  box-shadow: 5px 5px #efefef;
+  padding: 5px 10px;
+}
+
+#user-infor {
+  margin-top: 80px;
+}
+
+#card-user {
+  background-color: #ff3399;
+  height: 200px;
+  position: relative;
+  border-radius: 5px;
+  padding: 0;
+}
+
+#avatar-panel {
+  position: relative;
+  height: 120%;
+}
+#avatar-panel img {
+  height: 120px;
+  top: 60%;
+  z-index: 1;
+  position: relative;
+}
+
+#avatar-panel:hover #edit-avatar-btn i {
+  display: block;
+  background-color: #f0f0f0;
+}
+#edit-avatar-btn {
+  top: 90%;
+  z-index: 2;
+  position: relative;
+  left: 7%;
+}
+#edit-avatar-btn i {
+  display: none;
+}
+
+
+#content-user-infor-page{
+  margin-top: 90px;
+}
+
+
+#table-infor{
+  border-right: solid 2px #dedede;
+  
+}
