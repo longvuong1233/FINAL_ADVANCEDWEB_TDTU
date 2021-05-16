@@ -10,7 +10,7 @@ const methodOverride = require('method-override');
 const passport = require("passport");
 const session = require("express-session");
 const flash = require("express-flash");
-const multer = require('multer');
+
 
 
 module.exports = (app, config) => {

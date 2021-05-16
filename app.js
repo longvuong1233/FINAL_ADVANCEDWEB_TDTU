@@ -10,7 +10,18 @@ const mySocket = require("./app/config-socket");
 
 require('dotenv').config()
 
-mongoose.connect(config.db);
+mongoose.connect(config.db,{
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+}).then(() => {
+  console.log("✅ Database was connected");
+})
+.catch((error) => {
+  console.error(`❌ Failed with ${error}`);
+});;
 const db = mongoose.connection;
 db.on('error', () => {
   throw new Error('unable to connect to database at ' + config.db);

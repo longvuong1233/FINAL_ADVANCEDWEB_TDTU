@@ -1,3 +1,4 @@
+//Tạo socket để nhận sự kiện từ server
 let socket = io();
 socket.on("connect", () => {});
 socket.on("disconnect", () => {});
@@ -13,16 +14,19 @@ const well = new Vue({
 
   methods: {
     stickImages() {
+      //Mở của sổ load ảnh từ máy
       let inputImage = document.getElementById("form-images");
       inputImage.click();
       inputImage.addEventListener("change", this.gotImages, false);
     },
     gotImages(evt) {
+      // Lấy ảnh gửi
       if (evt.target.files[0] != null) {
         this.images = evt.target.files;
       }
     },
     async emitPost() {
+      //Gửi thông tin bài viết mới lên server
       let iframeYoutube = "";
       if (this.youtube.trim() != "") {
         let url = new URL(this.youtube.trim());
@@ -49,9 +53,10 @@ const well = new Vue({
 });
 
 const panel = new Vue({
-  el: "#list-post",
+  el: ".list-post",
   data: {
     listPost: [],
+   
     dialogEditPost: false,
     indexPostTargetedEdit: -1,
     contentEdit: "",
@@ -64,10 +69,15 @@ const panel = new Vue({
   },
 
   async created() {
-    const listPost =await this.fetchPost()
+    // gọi hàm fetchPost để lấy bài viêt
+
+    const listPost = await this.fetchPost();
 
     this.listPost = listPost;
-    console.log(this.listPost);
+
+   
+  
+  
     window.addEventListener("scroll", this.handleScroll);
   },
 
@@ -77,24 +87,23 @@ const panel = new Vue({
   watch: {
     async isEnd(value) {
       if (value == true) {
-        const listPost =await this.fetchPost()
+        const listPost = await this.fetchPost();
         if (listPost.length != 0) {
           this.listPost = [...this.listPost, ...listPost];
-         
+
           this.turn++;
         }
         this.isEnd = false;
-
-        
       }
     },
   },
 
   methods: {
     async fetchPost() {
+      // Lấy bài viết từ server
       const idUser = window.location.search.split("=").slice(-1)[0];
 
-      let listPost;
+      let listPost = [];
       if (!idUser) {
         listPost = await axios.get("/post", {
           params: {
@@ -102,6 +111,7 @@ const panel = new Vue({
           },
         });
       } else {
+        console.log("!1");
         listPost = await axios.get("/post", {
           params: {
             idUser: idUser,
@@ -109,11 +119,12 @@ const panel = new Vue({
           },
         });
       }
-      
-      return listPost.data
+
+      return [...listPost.data];
     },
     handleScroll(e) {
       $(document).ready(() => {
+        // xử lý bắt sự kiện lăn cuối trang để gọi bài viết mới
         let position = $(window).scrollTop();
 
         let limitScroll = $(document).height() - $(window).height();
@@ -124,6 +135,7 @@ const panel = new Vue({
       });
     },
     openComment(idPost) {
+      // Bật mở ổ comment bài viêt
       let state = document.getElementById("comment-area" + idPost).style
         .display;
 
@@ -132,6 +144,7 @@ const panel = new Vue({
     },
 
     comment(idPost, idUser, indexPost) {
+      // Comment bài viết
       let targetInput = document.getElementById(
         "input-comment-" + idPost
       ).value;
@@ -149,6 +162,7 @@ const panel = new Vue({
         });
     },
     deleteComment(idComment, idUser, indexPost, indexComment) {
+      // Xóa Comment
       axios.delete("/comment", {
         params: {
           idComment,
@@ -161,6 +175,7 @@ const panel = new Vue({
       ];
     },
     leaveHeart(idUser, indexPost, idPost) {
+      // Thả tim bài viêt
       axios.post("/post/heart", {
         idUser,
         idPost,
@@ -176,11 +191,13 @@ const panel = new Vue({
       }
     },
     checkHeart(idUser, indexPost) {
+      // KIểm tra xem đã thả tim bài viết chưa
       const indexUser = this.listPost[indexPost].heart.indexOf(idUser);
       return indexUser != -1 ? true : false;
     },
 
     openEditPost(indexPost, idPost) {
+      // Mở cửa sổ edit bài viêt
       if (
         indexPost == this.indexPostTargetedEdit ||
         this.indexPostTargetedEdit == -1
@@ -192,16 +209,19 @@ const panel = new Vue({
       this.contentEdit = this.listPost[indexPost].content;
     },
     stickImages() {
+      // mở  cửa sổ lấy ảnh từ máy
       let inputImage = document.getElementById("form-images-edit");
       inputImage.click();
       inputImage.addEventListener("change", this.gotImages, false);
     },
     gotImages(evt) {
+      // Lấy file ảnh để gửi lên server
       if (evt.target.files[0] != null) {
         this.imagesEdit = evt.target.files;
       }
     },
     async emitPost() {
+      // Gửi thông tin chỉnh sửa bài viết để gửi lên server
       let iframeYoutube = "";
 
       if (this.youtubeEdit.trim() != "") {
@@ -209,7 +229,7 @@ const panel = new Vue({
         let v = url.searchParams.get("v");
         iframeYoutube = "https://www.youtube.com/embed/" + v;
       }
-      console.log(iframeYoutube);
+
       let data = new FormData();
 
       for (let i = 0; i < this.imagesEdit.length; i++) {
@@ -232,6 +252,7 @@ const panel = new Vue({
       this.deleteImagesEdit = false;
     },
     deletePost(indexPost, idPost) {
+      // Xóa bài viêt
       axios.delete("/post", {
         params: {
           idPost,
@@ -252,26 +273,34 @@ const scrollArea = new Vue({
     listInform: [],
   },
   async created() {
+    // Lấy 5 thông báo phòng ban mới nhất
+    // GỌi API
     const listNewestInform = await axios.get("/inform/api");
 
     this.listInform = listNewestInform.data;
 
+    //Lắng nghe sự kiện socket có thông báo mới
     socket.on("haveNewInform", (signal) => {
       if (signal == "ok") {
+        // Gọi hàm fetchInform để lấy thông báo mới
         this.fetchInform();
       }
     });
   },
   methods: {
     async fetchInform() {
+      // Gọi API để lấy thông báo mới
       const listNewestInform = await axios.get("/inform/api");
 
       this.listInform = listNewestInform.data;
     },
     briefText(text, count) {
+      // RÚt gọn text
       return text.substring(0, count) + "...";
     },
     convertTime(time) {
+      // Tính thời gian
+      // Vừa xong, 1 phút trước
       time = new Date(time).getTime();
 
       let temp = Math.floor((new Date().getTime() - time) / 1000);
@@ -315,20 +344,24 @@ const listInform = new Vue({
 });
 
 const userInfor = new Vue({
-  el: "#user-infor",
+  el: "#user-infor-1",
   methods: {
     changeAvatar() {
+      // mở cửa sổ lấy avatar từ mays
       let inputImage = document.getElementById("input-change-avatar");
       inputImage.click();
       inputImage.addEventListener("change", this.gotImages, false);
     },
     gotImages(evt) {
+      // Gửi avatar lên server
       if (evt.target.files[0] != null) {
         document.getElementById("form-change-avatar").submit();
       }
     },
   },
 });
+
+
 
 function setTooltip() {
   console.log($('[data-toggle="tooltip"]'));

@@ -12,11 +12,13 @@ const fs = require("fs-extra");
 module.exports = (app) => {
   app.use("/user", router);
 };
-
+// Tạo tài khoản cho khoa hay phòng ban
 router.post("/",middle.checkLogged,middle.checkAdmin ,async (req, res) => {
   try {
     const { username, name } = req.body;
+    
 
+    //tạo user mới
     const user = new User({
       username: username.trim(),
       name,
@@ -34,6 +36,8 @@ router.post("/",middle.checkLogged,middle.checkAdmin ,async (req, res) => {
   }
 });
 
+
+//Admin phân loại chủ đề post bài cho phong ban
 router.post("/edit",middle.checkLogged,middle.checkAdmin , (req, res) => {
   try {
     const { idType, idUser } = req.body;
@@ -54,6 +58,7 @@ router.post("/edit",middle.checkLogged,middle.checkAdmin , (req, res) => {
   }
 });
 
+// thay đổi thông tin user: ten lơp khoa
 router.post("/editinfor", middle.checkLogged,async (req, res) => {
   try {
     const { name, faculty } = req.body;
@@ -93,9 +98,10 @@ router.get("/", middle.checkLogged,async (req, res) => {
       throw new Error();
     }
 
-    res.render("userInfor", {
+    res.render("user", {
       title: req.user.name,
       user: req.user,
+      target:'user',
       targetedUser: user,
     });
   } catch (err) {
@@ -103,6 +109,7 @@ router.get("/", middle.checkLogged,async (req, res) => {
   }
 });
 
+//Thay đổi avatar
 router.post("/editavatar",middle.checkLogged ,upload.single("avatar"), async (req, res) => {
   try {
     let { path, originalname } = req.file;
@@ -138,9 +145,9 @@ router.get("/logout", (req, res) => {
   res.redirect("/login");
 });
 
-
+//Đôi mật khẩu 
 router.post("/changepassword",middle.checkLogged,(req,res)=>{
-  console.log(req.body)
+  
   try{
     User.findById(req.user._id,async(err,doc)=>{
       if(err){

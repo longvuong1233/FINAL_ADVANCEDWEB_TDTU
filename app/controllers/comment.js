@@ -8,6 +8,7 @@ module.exports = (app) => {
   app.use("/comment", router);
 };
 
+//Comment bài viet
 router.post("/", middle.checkLogged,async (req, res) => {
   try {
     const { message, idOwner, idPost } = req.body;
@@ -35,6 +36,8 @@ router.post("/", middle.checkLogged,async (req, res) => {
     console.log(err);
   }
 });
+
+//Xóa comment
 
 router.delete("/", middle.checkLogged,(req, res) => {
   try {

@@ -11,6 +11,8 @@ module.exports = (app) => {
   app.use("/inform", router);
 };
 
+
+//Trả về tất cả các thông báo
 router.get("/", middle.checkLogged, async (req, res) => {
   try {
     const { id } = req.query;
@@ -82,6 +84,8 @@ router.get("/", middle.checkLogged, async (req, res) => {
   }
 });
 
+
+// Tạo thông báo mới
 router.post("/", middle.checkLogged, middle.checkFaculty, async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -96,6 +100,8 @@ router.post("/", middle.checkLogged, middle.checkFaculty, async (req, res) => {
     });
 
     await inform.save();
+    //Realtime thông báo
+    //Dùng Socket để gửi tới client
     mySocket.getIO().local.emit("haveNewInform", "ok");
     res.redirect("back");
   } catch (err) {
@@ -103,6 +109,8 @@ router.post("/", middle.checkLogged, middle.checkFaculty, async (req, res) => {
     res.redirect("back");
   }
 });
+
+// API trả về 5 thông báo mới nhất
 
 router.get("/api",async (req, res) => {
   try {
@@ -118,6 +126,8 @@ router.get("/api",async (req, res) => {
   }
 });
 
+
+//Xóa thông báo
 router.get("/delete/:id",middle.checkLogged,middle.checkFaculty ,async (req, res) => {
   try {
  
@@ -129,6 +139,7 @@ router.get("/delete/:id",middle.checkLogged,middle.checkFaculty ,async (req, res
   }
 });
 
+//Chỉnh sủa thông báo
 router.post("/edit" ,middle.checkLogged,middle.checkFaculty,async(req,res)=>{
  try{
   

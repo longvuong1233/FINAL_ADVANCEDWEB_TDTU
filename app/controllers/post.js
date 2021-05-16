@@ -14,12 +14,14 @@ module.exports = (app) => {
   app.use("/post", router);
 };
 
+
+// Tạo bài viết mới
 router.post("/",middle.checkLogged, upload.any(), async (req, res) => {
   try {
     const { youtube, content } = req.body;
 
     let images = [];
-
+    //Lưu file ảnh
     for (let i = 0; i < req.files.length; i++) {
       let { path, originalname } = req.files[i];
       let newPath = `img/${
@@ -76,6 +78,8 @@ router.post("/",middle.checkLogged, upload.any(), async (req, res) => {
   }
 });
 
+//API trả về lần lượt 10 bài viết
+
 router.get("/",middle.checkLogged, async (req, res) => {
   const {idUser,turn} =req.query
   console.log(turn)
@@ -111,6 +115,7 @@ router.get("/",middle.checkLogged, async (req, res) => {
   res.json(listPost);
 });
 
+//Thả tim bài viêt
 router.post("/heart",middle.checkLogged, (req, res) => {
   try {
     const { idUser, idPost } = req.body;
@@ -135,6 +140,8 @@ router.post("/heart",middle.checkLogged, (req, res) => {
   }
 });
 
+
+// Chỉnh sửa bài viêt
 router.patch("/", middle.checkLogged,upload.any(), async (req, res) => {
   try {
     const { youtube, content, deleteImages, idPost } = req.body;
@@ -197,6 +204,8 @@ router.patch("/", middle.checkLogged,upload.any(), async (req, res) => {
     console.log(err);
   }
 });
+
+//Xóa bài viêt
 
 router.delete("/", middle.checkLogged,(req, res) => {
   try {
